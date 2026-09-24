@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jogo de Memorização</title>
+
+    <!-- FONTES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =====================================================
+           FUNDO
+        ===================================================== */
+
+        body {
+            min-height: 100vh;
+
+            background: #0d3b66;
+
+            font-family: 'Poppins', sans-serif;
+
+            overflow: hidden;
+
+            position: relative;
+        }
+
+
+        /* =====================================================
+           MENU / CABEÇALHO
+        ===================================================== */
+
+        header {
+            width: 100%;
+
+            height: 70px;
+
+            background: rgba(10, 48, 83, 0.95);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 55px;
+
+            position: relative;
+
+            z-index: 10;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.20);
+
+            border-bottom: 1px solid rgba(142, 216, 255, 0.25);
+        }
+
+
+        /* NOME DO PROJETO */
+
+        .logo {
+            color: white;
+
+            font-family: 'Roboto Condensed', sans-serif;
+
+            font-size: 24px;
+
+            letter-spacing: 1px;
+
+            text-decoration: none;
+        }
+
+
+        .logo span {
+            color: #8ed8ff;
+        }
+
+
+        /* MENU */
+
+        nav {
+            display: flex;
+
+            gap: 35px;
+
+            align-items: center;
+        }
+
+
+        nav a {
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            font-weight: 500;
+
+            position: relative;
+
+            transition: 0.3s;
+        }
+
+
+        /* LINHA ANIMADA */
+
+        nav a::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            bottom: -7px;
+
+            width: 0;
+
+            height: 2px;
+
+            background: #8ed8ff;
+
+            box-shadow: 0 0 8px #8ed8ff;
+
+            transition: 0.3s;
+        }
+
+
+        nav a:hover {
+            color: #8ed8ff;
+
+            transform: translateY(-2px);
+        }
+
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+
+        /* =====================================================
+           BRILHOS
+        ===================================================== */
+
+        .brilho {
+            position: absolute;
+
+            width: 5px;
+            height: 5px;
+
+            border-radius: 50%;
+
+            background: white;
+
+            box-shadow:
+                0 0 6px white,
+                0 0 14px #8ed8ff,
+                0 0 25px #8ed8ff;
+
+            animation: brilho 3s infinite ease-in-out;
+
+            z-index: 1;
+        }
+
+
+        .b1 {
+            top: 12%;
+            left: 8%;
+        }
+
+        .b2 {
+            top: 25%;
+            left: 25%;
+            animation-delay: .5s;
+        }
+
+        .b3 {
+            top: 17%;
+            right: 12%;
+            animation-delay: 1s;
+        }
+
+        .b4 {
+            top: 42%;
+            left: 7%;
+            animation-delay: 1.5s;
+        }
+
+        .b5 {
+            top: 55%;
+            right: 8%;
+            animation-delay: 2s;
+        }
+
+        .b6 {
+            bottom: 15%;
+            left: 12%;
+            animation-delay: .7s;
+        }
+
+        .b7 {
+            bottom: 8%;
+            left: 40%;
+            animation-delay: 1.2s;
+        }
+
+        .b8 {
+            bottom: 18%;
+            right: 15%;
+            animation-delay: 1.7s;
+        }
+
+        .b9 {
+            top: 70%;
+            left: 4%;
+            animation-delay: 2.2s;
+        }
+
+        .b10 {
+            top: 82%;
+            right: 5%;
+            animation-delay: .8s;
+        }
+
+        .b11 {
+            top: 10%;
+            left: 45%;
+            animation-delay: 1.4s;
+        }
+
+        .b12 {
+            top: 62%;
+            left: 52%;
+            animation-delay: 2.3s;
+        }
+
+
+        @keyframes brilho {
+
+            0%, 100% {
+                transform: scale(.7);
+
+                opacity: .25;
+            }
+
+            50% {
+                transform: scale(1.8);
+
+                opacity: 1;
+            }
+        }
+
+
+        /* =====================================================
+           REDE NEURAL
+        ===================================================== */
+
+        .rede-neural {
+            position: absolute;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            z-index: 1;
+        }
+
+
+        .neuronio {
+            position: absolute;
+
+            width: 11px;
+            height: 11px;
+
+            border-radius: 50%;
+
+            background: #bcecff;
+
+            box-shadow:
+                0 0 7px #bcecff,
+                0 0 15px #8ed8ff,
+                0 0 30px rgba(142, 216, 255, .9);
+
+            animation: pulsar 2.5s infinite ease-in-out;
+        }
+
+
+        .n1 {
+            top: 18%;
+            left: 15%;
+        }
+
+        .n2 {
+            top: 20%;
+            left: 80%;
+            animation-delay: .5s;
+        }
+
+        .n3 {
+            top: 35%;
+            left: 4%;
+            animation-delay: 1s;
+        }
+
+        .n4 {
+            top: 38%;
+            right: 6%;
+            animation-delay: 1.5s;
+        }
+
+        .n5 {
+            top: 58%;
+            left: 8%;
+            animation-delay: .8s;
+        }
+
+        .n6 {
+            top: 65%;
+            right: 5%;
+            animation-delay: 1.2s;
+        }
+
+        .n7 {
+            bottom: 10%;
+            left: 23%;
+            animation-delay: .3s;
+        }
+
+        .n8 {
+            bottom: 12%;
+            right: 25%;
+            animation-delay: 1.8s;
+        }
+
+        .n9 {
+            top: 75%;
+            left: 48%;
+            animation-delay: .7s;
+        }
+
+        .n10 {
+            top: 28%;
+            left: 92%;
+            animation-delay: 1.4s;
+        }
+
+        .n11 {
+            bottom: 8%;
+            right: 7%;
+            animation-delay: 2s;
+        }
+
+        .n12 {
+            top: 12%;
+            left: 55%;
+            animation-delay: .9s;
+        }
+
+
+        @keyframes pulsar {
+
+            0%, 100% {
+                transform: scale(1);
+
+                opacity: .45;
+            }
+
+            50% {
+                transform: scale(1.7);
+
+                opacity: 1;
+            }
+        }
+
+
+        /* =====================================================
+           LINHAS DOS NEURÔNIOS
+        ===================================================== */
+
+        .linha {
+            position: absolute;
+
+            height: 2px;
+
+            background: rgba(142, 216, 255, .28);
+
+            transform-origin: left center;
+
+            box-shadow:
+                0 0 7px rgba(142, 216, 255, .7);
+
+            animation: linha 3s infinite ease-in-out;
+        }
+
+
+        .l1 {
+            width: 180px;
+
+            top: 20%;
+            left: 15%;
+
+            transform: rotate(8deg);
+        }
+
+        .l2 {
+            width: 220px;
+
+            top: 35%;
+            left: 4%;
+
+            transform: rotate(12deg);
+        }
+
+        .l3 {
+            width: 180px;
+
+            top: 38%;
+            right: 6%;
+
+            transform: rotate(-15deg);
+        }
+
+        .l4 {
+            width: 170px;
+
+            top: 65%;
+            right: 5%;
+
+            transform: rotate(-20deg);
+        }
+
+        .l5 {
+            width: 190px;
+
+            bottom: 11%;
+            left: 23%;
+
+            transform: rotate(-10deg);
+        }
+
+        .l6 {
+            width: 170px;
+
+            bottom: 12%;
+            right: 25%;
+
+            transform: rotate(15deg);
+        }
+
+
+        @keyframes linha {
+
+            0%, 100% {
+                opacity: .2;
+            }
+
+            50% {
+                opacity: .8;
+            }
+        }
+
+
+        /* =====================================================
+           CARD PRINCIPAL
+        ===================================================== */
+
+        .card-principal {
+
+            position: absolute;
+
+            width: 745px;
+
+            height: 365px;
+
+            left: 50%;
+
+            top: 53%;
+
+            transform: translate(-50%, -50%);
+
+            background: rgba(255, 255, 255, .94);
+
+            border-radius: 60px;
+
+            border: 1px solid rgba(255, 255, 255, .7);
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, .25),
+                0 0 35px rgba(142, 216, 255, .12);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            z-index: 5;
+
+            animation: entrar 1s ease;
+        }
+
+
+        /* BRILHO DO CARD */
+
+        .card-principal::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 12%;
+
+            width: 76%;
+
+            height: 2px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                #ffffff,
+                transparent
+            );
+
+            opacity: .8;
+        }
+
+
+        /* =====================================================
+           TEXTO
+        ===================================================== */
+
+        .conteudo {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .conteudo h1 {
+
+            color: #a9250b;
+
+            font-family: 'Roboto Condensed', sans-serif;
+
+            font-size: 38px;
+
+            margin-bottom: 0;
+
+            text-shadow:
+                0 1px 0 rgba(0, 0, 0, .08);
+        }
+
+
+        .conteudo h2 {
+
+            color: #a9250b;
+
+            font-family: Georgia, serif;
+
+            font-weight: 400;
+
+            font-size: 25px;
+
+            margin-top: -2px;
+        }
+
+
+        /* =====================================================
+           BOTÃO JOGAR
+        ===================================================== */
+
+        .botao-jogar {
+
+            display: inline-block;
+
+            margin-top: 28px;
+
+            padding: 11px 28px;
+
+            background: #a9250b;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 12px;
+
+            font-family: 'Poppins', sans-serif;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            box-shadow:
+                0 7px 18px rgba(169, 37, 11, .3);
+
+            transition: .3s;
+        }
+
+
+        .botao-jogar:hover {
+
+            background: #c83717;
+
+            transform: translateY(-3px) scale(1.04);
+
+            box-shadow:
+                0 10px 25px rgba(169, 37, 11, .45);
+        }
+
+
+        /* =====================================================
+           ANIMAÇÃO DO CARD
+        ===================================================== */
+
+        @keyframes entrar {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translate(-50%, -45%)
+                    scale(.96);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translate(-50%, -50%)
+                    scale(1);
+            }
+        }
+
+
+        /* =====================================================
+           DETALHE NEURAL NO CANTO
+        ===================================================== */
+
+        .cerebro {
+
+            position: absolute;
+
+            width: 75px;
+
+            height: 75px;
+
+            right: 35px;
+
+            bottom: 25px;
+
+            border: 2px solid rgba(142, 216, 255, .4);
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 18px rgba(142, 216, 255, .3);
+
+            animation: girar 8s linear infinite;
+
+            z-index: 2;
+        }
+
+
+        .cerebro::before,
+        .cerebro::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 16px;
+
+            height: 16px;
+
+            border: 2px solid #8ed8ff;
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 10px #8ed8ff;
+        }
+
+
+        .cerebro::before {
+
+            top: -9px;
+
+            left: 27px;
+        }
+
+
+        .cerebro::after {
+
+            bottom: -9px;
+
+            right: 4px;
+        }
+
+
+        @keyframes girar {
+
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* =====================================================
+           RESPONSIVO
+        ===================================================== */
+
+        @media (max-width: 800px) {
+
+            body {
+                overflow-y: auto;
+            }
+
+
+            header {
+
+                height: auto;
+
+                padding: 18px 20px;
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+
+            nav {
+                gap: 18px;
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+
+            .card-principal {
+
+                position: relative;
+
+                width: 90%;
+
+                height: 350px;
+
+                left: auto;
+
+                top: auto;
+
+                transform: none;
+
+                margin: 70px auto;
+            }
+
+
+            .card-principal:hover {
+                transform: none;
+            }
+
+
+            .conteudo h1 {
+                font-size: 30px;
+            }
+
+
+            .conteudo h2 {
+                font-size: 21px;
+            }
+
+
+            .cerebro {
+                display: none;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         CABEÇALHO / MENU
+    ===================================================== -->
+
+    <header>
+
+        <a href="#" class="logo">
+            Neuro<span>+</span>Game
+        </a>
+
+
+        <nav>
+
+
+
+            <a href="pesquisa.html">Sobre o projeto</a>
+
+            <a href="regras.html">Como funciona</a>
+
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         REDE DE NEURÔNIOS
+    ===================================================== -->
+
+    <div class="rede-neural">
+
+        <span class="neuronio n1"></span>
+        <span class="neuronio n2"></span>
+        <span class="neuronio n3"></span>
+        <span class="neuronio n4"></span>
+        <span class="neuronio n5"></span>
+        <span class="neuronio n6"></span>
+        <span class="neuronio n7"></span>
+        <span class="neuronio n8"></span>
+        <span class="neuronio n9"></span>
+        <span class="neuronio n10"></span>
+        <span class="neuronio n11"></span>
+        <span class="neuronio n12"></span>
+
+
+        <span class="linha l1"></span>
+        <span class="linha l2"></span>
+        <span class="linha l3"></span>
+        <span class="linha l4"></span>
+        <span class="linha l5"></span>
+        <span class="linha l6"></span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         BRILHOS
+    ===================================================== -->
+
+    <div class="brilho b1"></div>
+    <div class="brilho b2"></div>
+    <div class="brilho b3"></div>
+    <div class="brilho b4"></div>
+    <div class="brilho b5"></div>
+    <div class="brilho b6"></div>
+    <div class="brilho b7"></div>
+    <div class="brilho b8"></div>
+    <div class="brilho b9"></div>
+    <div class="brilho b10"></div>
+    <div class="brilho b11"></div>
+    <div class="brilho b12"></div>
+
+
+
+    <!-- =====================================================
+         CARD PRINCIPAL
+    ===================================================== -->
+
+    <main class="card-principal">
+
+        <div class="conteudo">
+
+            <h1>
+                Jogo de memorização
+            </h1>
+
+            <h2>
+                Em formato de Flash Cards
+            </h2>
+
+
+            <a href="jogo.html" class="botao-jogar">
+                Começar a jogar →
+            </a>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- DETALHE DECORATIVO -->
+
+    <div class="cerebro"></div>
+
+
+</body>
+
+</html>

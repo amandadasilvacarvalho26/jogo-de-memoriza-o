@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sobre a pesquisa</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0b416b;
+            font-family: Arial, Helvetica, sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
+            position: relative;
+        }
+
+
+        /* =====================================================
+           ✨ BRILHINHOS
+        ===================================================== */
+
+        .brilho {
+            position: absolute;
+            color: white;
+            font-size: 30px;
+            opacity: 0.8;
+
+            animation: piscar 2.5s infinite ease-in-out;
+
+            z-index: 1;
+        }
+
+        .b1 {
+            top: 8%;
+            left: 8%;
+        }
+
+        .b2 {
+            top: 18%;
+            left: 20%;
+            font-size: 22px;
+            animation-delay: .5s;
+        }
+
+        .b3 {
+            top: 10%;
+            right: 12%;
+            animation-delay: 1s;
+        }
+
+        .b4 {
+            top: 35%;
+            right: 7%;
+            font-size: 22px;
+            animation-delay: 1.5s;
+        }
+
+        .b5 {
+            bottom: 15%;
+            left: 8%;
+            animation-delay: .8s;
+        }
+
+        .b6 {
+            bottom: 8%;
+            right: 12%;
+            font-size: 24px;
+            animation-delay: 1.8s;
+        }
+
+        .b7 {
+            bottom: 25%;
+            right: 20%;
+            font-size: 18px;
+            animation-delay: 2s;
+        }
+
+        .b8 {
+            top: 55%;
+            left: 5%;
+            font-size: 20px;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes piscar {
+
+            0%, 100% {
+                opacity: .2;
+                transform: scale(.7) rotate(0deg);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.4) rotate(20deg);
+            }
+
+        }
+
+
+        /* =====================================================
+           🧠 NEURÔNIOS
+        ===================================================== */
+
+        .neuronio {
+            position: absolute;
+
+            width: 13px;
+            height: 13px;
+
+            background: #8edcff;
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 10px #8edcff,
+                0 0 25px rgba(142, 220, 255, .6);
+
+            animation: flutuar 5s infinite ease-in-out;
+
+            z-index: 1;
+        }
+
+
+        .neuronio::before {
+            content: "";
+
+            position: absolute;
+
+            width: 75px;
+            height: 3px;
+
+            background: rgba(142, 220, 255, .65);
+
+            top: 5px;
+            left: 5px;
+
+            transform-origin: left;
+            transform: rotate(25deg);
+        }
+
+
+        .neuronio::after {
+            content: "";
+
+            position: absolute;
+
+            width: 65px;
+            height: 3px;
+
+            background: rgba(142, 220, 255, .55);
+
+            top: 5px;
+            left: 5px;
+
+            transform-origin: left;
+            transform: rotate(-45deg);
+        }
+
+
+        .n1 {
+            top: 14%;
+            left: 17%;
+        }
+
+        .n2 {
+            top: 20%;
+            right: 18%;
+            animation-delay: 1s;
+        }
+
+        .n3 {
+            bottom: 17%;
+            left: 17%;
+            animation-delay: 2s;
+        }
+
+        .n4 {
+            bottom: 14%;
+            right: 17%;
+            animation-delay: 3s;
+        }
+
+        .n5 {
+            top: 48%;
+            left: 7%;
+            animation-delay: 1.5s;
+        }
+
+        .n6 {
+            top: 48%;
+            right: 7%;
+            animation-delay: 2.5s;
+        }
+
+
+        @keyframes flutuar {
+
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-18px) rotate(8deg);
+            }
+
+        }
+
+
+        /* =====================================================
+           🌌 PONTINHOS
+        ===================================================== */
+
+        .ponto {
+            position: absolute;
+
+            width: 5px;
+            height: 5px;
+
+            background: #b9eaff;
+
+            border-radius: 50%;
+
+            box-shadow: 0 0 10px #b9eaff;
+
+            animation: ponto 3s infinite alternate;
+        }
+
+        .p1 {
+            top: 25%;
+            left: 10%;
+        }
+
+        .p2 {
+            top: 30%;
+            right: 15%;
+            animation-delay: .5s;
+        }
+
+        .p3 {
+            bottom: 30%;
+            left: 12%;
+            animation-delay: 1s;
+        }
+
+        .p4 {
+            bottom: 22%;
+            right: 10%;
+            animation-delay: 1.5s;
+        }
+
+        .p5 {
+            top: 12%;
+            left: 45%;
+            animation-delay: 2s;
+        }
+
+        .p6 {
+            bottom: 10%;
+            left: 45%;
+            animation-delay: 2.5s;
+        }
+
+
+        @keyframes ponto {
+
+            from {
+                opacity: .2;
+                transform: scale(.7);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+
+        }
+
+
+        /* =====================================================
+           📖 QUADRO PRINCIPAL
+        ===================================================== */
+
+        .card {
+
+            width: 650px;
+
+            min-height: 440px;
+
+            background: #f1f1f1;
+
+            border-radius: 60px;
+
+            padding: 38px 50px;
+
+            position: relative;
+
+            z-index: 5;
+
+            box-shadow:
+
+                0 20px 40px rgba(0, 0, 0, .30),
+
+                0 0 35px rgba(255, 255, 255, .15);
+
+            animation: aparecer 1s ease-out;
+
+        }
+
+
+        @keyframes aparecer {
+
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(.93);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+        }
+
+
+        /* =====================================================
+           🧠 ÍCONE
+        ===================================================== */
+
+        .icone-neuronio {
+
+            position: absolute;
+
+            right: 35px;
+            top: 28px;
+
+            font-size: 35px;
+
+            animation: pulsar 2s infinite;
+
+        }
+
+
+        @keyframes pulsar {
+
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+        }
+
+
+        /* =====================================================
+           🔴 TÍTULO
+        ===================================================== */
+
+        h1 {
+
+            color: #a90000;
+
+            font-size: 27px;
+
+            margin-bottom: 12px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =====================================================
+           🔴 LINHA DECORATIVA
+        ===================================================== */
+
+        .linha {
+
+            width: 95px;
+
+            height: 5px;
+
+            background: #a90000;
+
+            border-radius: 20px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        /* =====================================================
+           📝 TEXTO
+        ===================================================== */
+
+        p {
+
+            color: #111;
+
+            font-size: 19px;
+
+            line-height: 1.55;
+
+            margin-bottom: 27px;
+
+            text-align: left;
+
+        }
+
+
+        /* =====================================================
+           ✨ ESTRELAS
+        ===================================================== */
+
+        .estrela {
+
+            position: absolute;
+
+            color: white;
+
+            font-size: 18px;
+
+            animation: estrela 3s infinite;
+
+            z-index: 2;
+
+        }
+
+
+        .e1 {
+            left: 25%;
+            bottom: 7%;
+        }
+
+        .e2 {
+            right: 30%;
+            top: 6%;
+            animation-delay: 1s;
+        }
+
+        .e3 {
+            left: 6%;
+            top: 60%;
+            animation-delay: 2s;
+        }
+
+        .e4 {
+            right: 5%;
+            bottom: 45%;
+            animation-delay: 1.5s;
+        }
+
+
+        @keyframes estrela {
+
+            0%, 100% {
+                opacity: .2;
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: rotate(180deg) scale(1.5);
+            }
+
+        }
+
+
+        /* =====================================================
+           📱 CELULAR
+        ===================================================== */
+
+        @media (max-width: 750px) {
+
+            body {
+                overflow-y: auto;
+                padding: 30px 0;
+            }
+
+            .card {
+
+                width: 90%;
+
+                min-height: auto;
+
+                padding: 30px;
+
+                border-radius: 40px;
+
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            p {
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- ✨ BRILHINHOS -->
+
+    <div class="brilho b1">✦</div>
+    <div class="brilho b2">✧</div>
+    <div class="brilho b3">✦</div>
+    <div class="brilho b4">✧</div>
+    <div class="brilho b5">✦</div>
+    <div class="brilho b6">✧</div>
+    <div class="brilho b7">✦</div>
+    <div class="brilho b8">✧</div>
+
+
+    <!-- 🧠 NEURÔNIOS -->
+
+    <div class="neuronio n1"></div>
+    <div class="neuronio n2"></div>
+    <div class="neuronio n3"></div>
+    <div class="neuronio n4"></div>
+    <div class="neuronio n5"></div>
+    <div class="neuronio n6"></div>
+
+
+    <!-- 🌌 PONTINHOS -->
+
+    <div class="ponto p1"></div>
+    <div class="ponto p2"></div>
+    <div class="ponto p3"></div>
+    <div class="ponto p4"></div>
+    <div class="ponto p5"></div>
+    <div class="ponto p6"></div>
+
+
+    <!-- ✨ ESTRELAS -->
+
+    <div class="estrela e1">✦</div>
+    <div class="estrela e2">✧</div>
+    <div class="estrela e3">✦</div>
+    <div class="estrela e4">✧</div>
+
+
+    <!-- 📖 QUADRO -->
+
+    <div class="card">
+
+        <div class="icone-neuronio">🧠</div>
+
+        <h1>Sobre a pesquisa</h1>
+
+        <div class="linha"></div>
+
+
+        <p>
+            O trabalho aborda a ODS 4, Educação de Qualidade,
+            e investiga como a neurociência pode contribuir para
+            a aprendizagem dos alunos do Ensino Médio do Colégio
+            Portoá. A pesquisa analisa aspectos como memória,
+            atenção, emoções, motivação e neuroplasticidade,
+            buscando compreender de que forma esses conhecimentos
+            podem ajudar a melhorar o ensino e a aprendizagem
+            na escola.
+        </p>
+
+
+        <p>
+            Com base nesse estudo, os autores decidiram
+            desenvolver um jogo de memorização, destinado aos
+            estudantes do Colégio Portoá, para que possam estudar
+            e memorizar conteúdos de diferentes matérias.
+        </p>
+
+    </div>
+
+
+</body>
+</html>
+```
