@@ -1,0 +1,1132 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flashcards de Sintaxe</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #071d38;
+    overflow: hidden;
+}
+
+/* =========================
+   FUNDO
+========================= */
+
+.background {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 30%, #174c7e, transparent 28%),
+        radial-gradient(circle at 80% 70%, #123e69, transparent 28%),
+        #071d38;
+    overflow: hidden;
+}
+
+/* =========================
+   NEURÔNIOS
+========================= */
+
+.neuron {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #7fb7e8;
+    border-radius: 50%;
+    box-shadow:
+        0 0 10px #7fb7e8,
+        0 0 20px rgba(127,183,232,.5);
+    animation: pulse 3s infinite alternate;
+}
+
+.neuron::before,
+.neuron::after {
+    content: "";
+    position: absolute;
+    height: 1px;
+    background: rgba(127,183,232,.25);
+    transform-origin: left center;
+}
+
+.neuron::before {
+    width: 100px;
+    transform: rotate(25deg);
+}
+
+.neuron::after {
+    width: 75px;
+    transform: rotate(-35deg);
+}
+
+.n1 { top: 15%; left: 8%; }
+.n2 { top: 30%; left: 20%; }
+.n3 { top: 12%; right: 15%; }
+.n4 { top: 45%; right: 7%; }
+.n5 { bottom: 20%; left: 10%; }
+.n6 { bottom: 12%; left: 45%; }
+.n7 { bottom: 25%; right: 18%; }
+.n8 { top: 65%; left: 5%; }
+.n9 { top: 50%; right: 10%; }
+.n10 { top: 8%; left: 55%; }
+
+.n2 { animation-delay: .5s; }
+.n3 { animation-delay: 1s; }
+.n4 { animation-delay: 1.5s; }
+.n5 { animation-delay: 2s; }
+
+@keyframes pulse {
+    from {
+        opacity: .3;
+        transform: scale(.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* =========================
+   PAINEL
+========================= */
+
+.game {
+    position: relative;
+    z-index: 2;
+
+    width: 760px;
+    height: 560px;
+
+    max-width: 92vw;
+    max-height: 90vh;
+
+    background: rgba(248,249,251,.98);
+
+    border-radius: 22px;
+
+    padding: 20px 28px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.45);
+}
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.logo-icon {
+    font-size: 27px;
+}
+
+.logo h1 {
+    color: #173b69;
+    font-size: 21px;
+}
+
+.logo p {
+    color: #777;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.stats {
+    display: flex;
+    gap: 6px;
+}
+
+.stat {
+    background: #edf2f8;
+    color: #173b69;
+    padding: 6px 9px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* =========================
+   PROGRESSO
+========================= */
+
+.info {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 14px;
+
+    color: #173b69;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.progress {
+    height: 5px;
+    background: #dce1e7;
+    border-radius: 10px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #315fa0;
+    transition: .4s;
+}
+
+/* =========================
+   FLASHCARD
+========================= */
+
+.card-area {
+    height: 275px;
+    margin-top: 16px;
+    perspective: 1300px;
+}
+
+.flashcard {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+
+    transform-style: preserve-3d;
+
+    transition:
+        transform .9s
+        cubic-bezier(.65,.05,.36,1);
+
+    cursor: pointer;
+}
+
+.flashcard.flipped {
+    transform: rotateY(-180deg);
+}
+
+.card {
+    position: absolute;
+    inset: 0;
+
+    border-radius: 16px;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* =========================
+   FRENTE
+========================= */
+
+.front {
+    background: #fff;
+
+    border: 2px solid #315fa0;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.15);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+.front::before {
+    content: "FLASHCARD";
+
+    position: absolute;
+    top: 14px;
+    left: 17px;
+
+    color: #7b8ca2;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.card-number {
+    color: #7b8ca2;
+    font-size: 10px;
+    margin-bottom: 10px;
+}
+
+.question {
+    color: #132f55;
+
+    font-size: 21px;
+    line-height: 1.35;
+
+    font-weight: bold;
+
+    max-width: 650px;
+}
+
+.flip-hint {
+    margin-top: 18px;
+
+    background: #e8eff8;
+    color: #315fa0;
+
+    padding: 7px 14px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* =========================
+   VERSO
+========================= */
+
+.back {
+    background:
+        linear-gradient(
+            135deg,
+            #174776,
+            #0c3158
+        );
+
+    border: 2px solid #4e82b8;
+
+    color: white;
+
+    transform: rotateY(180deg);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 18px 28px;
+}
+
+.answer-icon {
+    font-size: 25px;
+    margin-bottom: 3px;
+}
+
+.answer-label {
+    color: #a9c6e4;
+    font-size: 9px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.answer {
+    font-size: 14px;
+    line-height: 1.32;
+    font-weight: bold;
+    max-width: 680px;
+}
+
+/* =========================
+   MENSAGEM
+========================= */
+
+.message {
+    height: 17px;
+
+    margin-top: 8px;
+
+    text-align: center;
+
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.good {
+    color: #239765;
+}
+
+.bad {
+    color: #c94c57;
+}
+
+/* =========================
+   BOTÕES
+========================= */
+
+.buttons {
+    display: flex;
+    gap: 9px;
+    margin-top: 6px;
+}
+
+button {
+    border: none;
+    border-radius: 9px;
+
+    padding: 10px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.wrong {
+    flex: 1;
+    background: #d6535d;
+    color: white;
+}
+
+.correct {
+    flex: 1;
+    background: #2c9a6d;
+    color: white;
+}
+
+.next {
+    display: none;
+
+    width: 100%;
+
+    margin-top: 7px;
+
+    background: #315fa0;
+    color: white;
+}
+
+/* =========================
+   FINAL
+========================= */
+
+.final {
+    display: none;
+    text-align: center;
+    padding-top: 80px;
+}
+
+.final-icon {
+    font-size: 55px;
+}
+
+.final h2 {
+    color: #173b69;
+    font-size: 28px;
+    margin-top: 12px;
+}
+
+.final p {
+    color: #777;
+    margin-top: 5px;
+}
+
+.final-score {
+    margin: 20px auto;
+    color: #315fa0;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.restart {
+    background: #315fa0;
+    color: white;
+    padding: 11px 25px;
+}
+
+/* =========================
+   CELULAR
+========================= */
+
+@media(max-width: 650px) {
+
+    body {
+        overflow: auto;
+    }
+
+    .game {
+        width: 94vw;
+        height: auto;
+        min-height: 520px;
+        padding: 17px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .card-area {
+        height: 290px;
+    }
+
+    .question {
+        font-size: 19px;
+    }
+
+    .answer {
+        font-size: 13px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- FUNDO -->
+
+<div class="background">
+
+    <div class="neuron n1"></div>
+    <div class="neuron n2"></div>
+    <div class="neuron n3"></div>
+    <div class="neuron n4"></div>
+    <div class="neuron n5"></div>
+    <div class="neuron n6"></div>
+    <div class="neuron n7"></div>
+    <div class="neuron n8"></div>
+    <div class="neuron n9"></div>
+    <div class="neuron n10"></div>
+
+</div>
+
+
+<!-- JOGO -->
+
+<div class="game">
+
+    <div id="game">
+
+        <div class="header">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    🧠
+                </div>
+
+                <div>
+
+                    <h1>
+                        Flashcards de Sintaxe
+                    </h1>
+
+                    <p>
+                        Teste sua memória e seus conhecimentos!
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    ⭐ <span id="points">0</span>
+                </div>
+
+                <div class="stat">
+                    ❤️ <span id="lives">❤️❤️❤️</span>
+                </div>
+
+                <div class="stat">
+                    🔥 <span id="streak">0</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <span id="questionNumber">
+                Pergunta 1 de 20
+            </span>
+
+            <span>
+                Progresso
+            </span>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div
+                class="progress-bar"
+                id="progressBar">
+            </div>
+
+        </div>
+
+
+        <!-- FLASHCARD -->
+
+        <div class="card-area">
+
+            <div
+                class="flashcard"
+                id="flashcard">
+
+                <!-- FRENTE -->
+
+                <div class="card front">
+
+                    <div
+                        class="card-number"
+                        id="cardNumber">
+                        CARTA 01
+                    </div>
+
+                    <div
+                        class="question"
+                        id="question">
+                    </div>
+
+                    <div class="flip-hint">
+                        👆 Clique para virar
+                    </div>
+
+                </div>
+
+
+                <!-- VERSO -->
+
+                <div class="card back">
+
+                    <div class="answer-icon">
+                        💡
+                    </div>
+
+                    <div class="answer-label">
+                        RESPOSTA
+                    </div>
+
+                    <div
+                        class="answer"
+                        id="answer">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="message"
+            id="message">
+        </div>
+
+
+        <div
+            class="buttons"
+            id="buttons">
+
+            <button
+                class="wrong"
+                onclick="answer(false)">
+
+                ❌ Eu errei
+
+            </button>
+
+            <button
+                class="correct"
+                onclick="answer(true)">
+
+                ✅ Eu acertei
+
+            </button>
+
+        </div>
+
+
+        <button
+            class="next"
+            id="nextButton"
+            onclick="nextCard()">
+
+            Próximo flashcard →
+
+        </button>
+
+    </div>
+
+
+    <!-- FINAL -->
+
+    <div
+        class="final"
+        id="final">
+
+        <div class="final-icon">
+            🏆
+        </div>
+
+        <h2>
+            Parabéns!
+        </h2>
+
+        <p>
+            Você terminou todos os flashcards!
+        </p>
+
+        <div
+            class="final-score"
+            id="finalScore">
+        </div>
+
+        <button
+            class="restart"
+            onclick="restartGame()">
+
+            🔄 Jogar novamente
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   20 FLASHCARDS
+========================= */
+
+const cards = [
+
+    {
+        question: "O que é sujeito em uma oração?",
+        answer: "É de quem ou do que se fala na frase."
+    },
+
+    {
+        question: "O que é predicado?",
+        answer: "É o que se fala sobre o sujeito."
+    },
+
+    {
+        question: "Na frase “Os alunos estudaram para a prova”, qual é o sujeito?",
+        answer: `
+            <strong>Sujeito:</strong> “Os alunos”<br>
+            <strong>Núcleo do sujeito:</strong> “alunos”<br>
+            <strong>Predicado:</strong> “estudaram para a prova”<br>
+            <strong>Verbo:</strong> “estudaram”<br>
+            <strong>Tipo de verbo:</strong> intransitivo<br>
+            <strong>Adjunto adverbial:</strong> “para a prova” → indica finalidade<br>
+            <strong>Estrutura:</strong> Sujeito + Verbo + Adjunto adverbial
+        `
+    },
+
+    {
+        question: "Na frase “Maria comprou um livro”, qual é o objeto direto?",
+        answer: `
+            <strong>Sujeito:</strong> “Maria”<br>
+            <strong>Núcleo do sujeito:</strong> “Maria”<br>
+            <strong>Predicado:</strong> “comprou um livro”<br>
+            <strong>Verbo:</strong> “comprou”<br>
+            <strong>Tipo de verbo:</strong> transitivo direto<br>
+            <strong>Objeto direto:</strong> “um livro”<br>
+            <strong>Núcleo do objeto direto:</strong> “livro”<br>
+            <strong>Estrutura:</strong> Sujeito + Verbo + Objeto direto
+        `
+    },
+
+    {
+        question: "O que é objeto direto?",
+        answer: "É o complemento do verbo sem preposição."
+    },
+
+    {
+        question: "O que é objeto indireto?",
+        answer: "É o complemento do verbo com preposição."
+    },
+
+    {
+        question: "Na frase “João gosta de música”, qual é o objeto indireto?",
+        answer: `
+            <strong>Sujeito:</strong> “João”<br>
+            <strong>Núcleo do sujeito:</strong> “João”<br>
+            <strong>Predicado:</strong> “gosta de música”<br>
+            <strong>Verbo:</strong> “gosta”<br>
+            <strong>Tipo de verbo:</strong> transitivo indireto<br>
+            <strong>Objeto indireto:</strong> “de música”<br>
+            <strong>Núcleo do objeto indireto:</strong> “música”<br>
+            <strong>Preposição:</strong> “de”<br>
+            <strong>Estrutura:</strong> Sujeito + Verbo + Objeto indireto
+        `
+    },
+
+    {
+        question: "O que é um verbo transitivo?",
+        answer: "É um verbo que precisa de complemento."
+    },
+
+    {
+        question: "O que é um verbo intransitivo?",
+        answer: "É um verbo que não precisa de complemento."
+    },
+
+    {
+        question: "O que é predicativo do sujeito?",
+        answer: "É uma característica do sujeito."
+    },
+
+    {
+        question: "Na frase “A menina está feliz”, qual é o predicativo do sujeito?",
+        answer: `
+            <strong>Sujeito:</strong> “A menina”<br>
+            <strong>Núcleo do sujeito:</strong> “menina”<br>
+            <strong>Predicado:</strong> “está feliz”<br>
+            <strong>Verbo:</strong> “está”<br>
+            <strong>Tipo de verbo:</strong> verbo de ligação<br>
+            <strong>Predicativo do sujeito:</strong> “feliz”<br>
+            <strong>Estrutura:</strong> Sujeito + Verbo de ligação + Predicativo do sujeito
+        `
+    },
+
+    {
+        question: "O que é adjunto adverbial?",
+        answer: "É o termo que indica uma circunstância."
+    },
+
+    {
+        question: "Na frase “Pedro chegou cedo”, qual é o adjunto adverbial?",
+        answer: `
+            <strong>Sujeito:</strong> “Pedro”<br>
+            <strong>Núcleo do sujeito:</strong> “Pedro”<br>
+            <strong>Predicado:</strong> “chegou cedo”<br>
+            <strong>Verbo:</strong> “chegou”<br>
+            <strong>Tipo de verbo:</strong> intransitivo<br>
+            <strong>Adjunto adverbial:</strong> “cedo” → indica tempo<br>
+            <strong>Estrutura:</strong> Sujeito + Verbo + Adjunto adverbial
+        `
+    },
+
+    {
+        question: "O que é aposto?",
+        answer: "É um termo que explica ou identifica outro."
+    },
+
+    {
+        question: "Na frase “Machado de Assis, grande escritor brasileiro, nasceu no Rio de Janeiro”, qual é o aposto?",
+        answer: `
+            <strong>Sujeito:</strong> “Machado de Assis”<br>
+            <strong>Núcleo do sujeito:</strong> “Machado de Assis”<br>
+            <strong>Aposto:</strong> “grande escritor brasileiro”<br>
+            <strong>Predicado:</strong> “nasceu no Rio de Janeiro”<br>
+            <strong>Verbo:</strong> “nasceu”<br>
+            <strong>Tipo de verbo:</strong> intransitivo<br>
+            <strong>Adjunto adverbial:</strong> “no Rio de Janeiro” → indica lugar<br>
+            <strong>Estrutura:</strong> Sujeito + Aposto + Verbo + Adjunto adverbial
+        `
+    },
+
+    {
+        question: "O que é vocativo?",
+        answer: "É o termo usado para chamar alguém."
+    },
+
+    {
+        question: "Na frase “Amanda, venha aqui!”, qual é o vocativo?",
+        answer: `
+            <strong>Vocativo:</strong> “Amanda”<br>
+            <strong>Sujeito:</strong> oculto → “você”<br>
+            <strong>Predicado:</strong> “venha aqui”<br>
+            <strong>Verbo:</strong> “venha”<br>
+            <strong>Tipo de verbo:</strong> intransitivo<br>
+            <strong>Adjunto adverbial:</strong> “aqui” → indica lugar<br>
+            <strong>Estrutura:</strong> Vocativo + Sujeito oculto + Verbo + Adjunto adverbial<br>
+            <strong>Importante:</strong> “Amanda” é vocativo, não sujeito.
+        `
+    },
+
+    {
+        question: "Qual é a diferença entre sujeito simples e sujeito composto?",
+        answer: "O simples tem um núcleo e o composto tem dois ou mais."
+    },
+
+    {
+        question: "Na frase “João e Pedro estudaram”, o sujeito é simples ou composto?",
+        answer: `
+            <strong>Sujeito:</strong> “João e Pedro”<br>
+            <strong>Tipo de sujeito:</strong> composto<br>
+            <strong>Núcleos do sujeito:</strong> “João” e “Pedro”<br>
+            <strong>Predicado:</strong> “estudaram”<br>
+            <strong>Verbo:</strong> “estudaram”<br>
+            <strong>Tipo de verbo:</strong> intransitivo<br>
+            <strong>Estrutura:</strong> Sujeito composto + Verbo
+        `
+    },
+
+    {
+        question: "O que é sujeito oculto?",
+        answer: "É o sujeito que não aparece, mas dá para identificar."
+    }
+
+];
+
+
+let current = 0;
+let points = 0;
+let lives = 3;
+let streak = 0;
+let answered = false;
+
+
+/* =========================
+   MOSTRAR CARTA
+========================= */
+
+function showCard() {
+
+    const card = cards[current];
+
+    document.getElementById("question").textContent =
+        card.question;
+
+    document.getElementById("answer").innerHTML =
+        card.answer;
+
+    document.getElementById("cardNumber").textContent =
+        "CARTA " +
+        String(current + 1).padStart(2, "0");
+
+    document.getElementById("questionNumber").textContent =
+        `Pergunta ${current + 1} de ${cards.length}`;
+
+    document.getElementById("points").textContent =
+        points;
+
+    document.getElementById("streak").textContent =
+        streak;
+
+    document.getElementById("progressBar").style.width =
+        ((current / cards.length) * 100) + "%";
+
+    updateLives();
+
+    document.getElementById("flashcard")
+        .classList.remove("flipped");
+
+    document.getElementById("buttons")
+        .style.display = "flex";
+
+    document.getElementById("nextButton")
+        .style.display = "none";
+
+    document.getElementById("message")
+        .textContent = "";
+
+    document.getElementById("message")
+        .className = "message";
+
+    answered = false;
+}
+
+
+/* =========================
+   VIDAS
+========================= */
+
+function updateLives() {
+
+    let text = "";
+
+    for (let i = 0; i < 3; i++) {
+        text += i < lives ? "❤️" : "🖤";
+    }
+
+    document.getElementById("lives")
+        .textContent = text;
+}
+
+
+/* =========================
+   VIRAR
+========================= */
+
+document.getElementById("flashcard")
+    .addEventListener("click", function() {
+
+        this.classList.toggle("flipped");
+
+    });
+
+
+/* =========================
+   RESPOSTA
+========================= */
+
+function answer(correct) {
+
+    if (answered) return;
+
+    answered = true;
+
+    if (correct) {
+
+        points += 100;
+
+        streak++;
+
+        if (streak >= 3) {
+            points += 50;
+        }
+
+        document.getElementById("message")
+            .textContent =
+            streak >= 3
+            ? "🔥 COMBO! +150 pontos!"
+            : "🎉 Acertou! +100 pontos!";
+
+        document.getElementById("message")
+            .classList.add("good");
+
+    } else {
+
+        lives--;
+
+        streak = 0;
+
+        document.getElementById("message")
+            .textContent =
+            "❌ Tudo bem! Confira a resposta.";
+
+        document.getElementById("message")
+            .classList.add("bad");
+    }
+
+    document.getElementById("points")
+        .textContent = points;
+
+    document.getElementById("streak")
+        .textContent = streak;
+
+    updateLives();
+
+    document.getElementById("flashcard")
+        .classList.add("flipped");
+
+    document.getElementById("buttons")
+        .style.display = "none";
+
+    document.getElementById("nextButton")
+        .style.display = "block";
+}
+
+
+/* =========================
+   PRÓXIMA
+========================= */
+
+function nextCard() {
+
+    current++;
+
+    if (current >= cards.length) {
+        finishGame();
+        return;
+    }
+
+    showCard();
+}
+
+
+/* =========================
+   FINAL
+========================= */
+
+function finishGame() {
+
+    document.getElementById("game")
+        .style.display = "none";
+
+    document.getElementById("final")
+        .style.display = "block";
+
+    const percentage = Math.min(
+        100,
+        Math.round(
+            (points / (cards.length * 100)) * 100
+        )
+    );
+
+    document.getElementById("finalScore")
+        .innerHTML =
+        `⭐ Pontuação: <strong>${points}</strong><br>
+         🎯 Aproveitamento: <strong>${percentage}%</strong><br>
+         ❤️ Vidas restantes: <strong>${lives}</strong>`;
+}
+
+
+/* =========================
+   REINICIAR
+========================= */
+
+function restartGame() {
+
+    current = 0;
+    points = 0;
+    lives = 3;
+    streak = 0;
+
+    document.getElementById("game")
+        .style.display = "block";
+
+    document.getElementById("final")
+        .style.display = "none";
+
+    showCard();
+}
+
+
+showCard();
+
+</script>
+
+</body>
+</html>
+```

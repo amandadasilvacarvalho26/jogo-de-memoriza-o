@@ -1,0 +1,1524 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flashcards de Embriologia</title>
+
+<style>
+
+/* =====================================================
+   CONFIGURAÇÕES
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    background: #07345d;
+}
+
+
+/* =====================================================
+   FUNDO
+===================================================== */
+
+.background {
+    position: fixed;
+    inset: 0;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 20% 25%,
+            #16517d,
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 80% 70%,
+            #12466f,
+            transparent 30%
+        ),
+
+        #07345d;
+}
+
+
+/* =====================================================
+   BRILHOS
+===================================================== */
+
+.glow {
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    border-radius: 50%;
+
+    background: rgba(76,180,240,.13);
+
+    filter: blur(60px);
+
+    animation: glowMove 6s infinite alternate;
+}
+
+.glow1 {
+    top: -120px;
+    left: -80px;
+}
+
+.glow2 {
+    right: -120px;
+    bottom: -80px;
+
+    animation-delay: 2s;
+}
+
+.glow3 {
+    left: 45%;
+    top: 40%;
+
+    animation-delay: 4s;
+}
+
+@keyframes glowMove {
+
+    from {
+        transform: scale(.8);
+        opacity: .4;
+    }
+
+    to {
+        transform: scale(1.3);
+        opacity: .8;
+    }
+}
+
+
+/* =====================================================
+   NEURÔNIOS
+===================================================== */
+
+.neuron {
+    position: absolute;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #8bd4ff;
+
+    box-shadow:
+        0 0 10px #8bd4ff,
+        0 0 20px rgba(100,200,255,.7);
+
+    animation: pulse 3s infinite alternate;
+}
+
+.neuron::before,
+.neuron::after {
+
+    content: "";
+
+    position: absolute;
+
+    height: 1px;
+
+    background: rgba(130,210,255,.3);
+
+    transform-origin: left center;
+}
+
+.neuron::before {
+    width: 100px;
+    transform: rotate(25deg);
+}
+
+.neuron::after {
+    width: 75px;
+    transform: rotate(-35deg);
+}
+
+.n1 { top: 12%; left: 7%; }
+.n2 { top: 28%; left: 18%; }
+.n3 { top: 15%; right: 15%; }
+.n4 { top: 42%; right: 7%; }
+.n5 { bottom: 20%; left: 9%; }
+.n6 { bottom: 10%; left: 43%; }
+.n7 { bottom: 25%; right: 17%; }
+.n8 { top: 65%; left: 5%; }
+.n9 { top: 55%; right: 10%; }
+.n10 { top: 8%; left: 53%; }
+
+@keyframes pulse {
+
+    from {
+        opacity: .25;
+        transform: scale(.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.25);
+    }
+}
+
+
+/* =====================================================
+   JOGO
+===================================================== */
+
+.game {
+
+    position: relative;
+
+    z-index: 5;
+
+    width: 720px;
+    max-width: 90vw;
+
+    min-height: 560px;
+
+    padding: 25px 35px;
+
+    background: rgba(248,249,251,.98);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.45);
+}
+
+
+/* =====================================================
+   CABEÇALHO
+===================================================== */
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.logo-icon {
+
+    font-size: 31px;
+}
+
+.logo h1 {
+
+    color: #173b69;
+
+    font-size: 22px;
+}
+
+.logo p {
+
+    color: #777;
+
+    font-size: 11px;
+
+    margin-top: 3px;
+}
+
+
+/* =====================================================
+   ESTATÍSTICAS
+===================================================== */
+
+.stats {
+
+    display: flex;
+
+    gap: 6px;
+}
+
+.stat {
+
+    background: #edf2f8;
+
+    color: #173b69;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   PROGRESSO
+===================================================== */
+
+.info {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 16px;
+
+    color: #173b69;
+
+    font-size: 11px;
+
+    font-weight: bold;
+}
+
+.progress {
+
+    height: 6px;
+
+    background: #dce1e7;
+
+    border-radius: 10px;
+
+    margin-top: 6px;
+
+    overflow: hidden;
+}
+
+.progress-bar {
+
+    width: 0%;
+
+    height: 100%;
+
+    background: #3170a5;
+
+    transition: .4s;
+}
+
+
+/* =====================================================
+   ÁREA DO FLASHCARD
+===================================================== */
+
+.card-area {
+
+    height: 285px;
+
+    margin-top: 18px;
+
+    perspective: 1200px;
+}
+
+
+.flashcard {
+
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+
+    transform-style: preserve-3d;
+
+    transition:
+        transform .8s
+        cubic-bezier(.65,.05,.36,1);
+
+    cursor: pointer;
+}
+
+.flashcard.flipped {
+
+    transform: rotateY(-180deg);
+}
+
+
+.card {
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 17px;
+
+    backface-visibility: hidden;
+
+    -webkit-backface-visibility: hidden;
+}
+
+
+/* =====================================================
+   FRENTE
+===================================================== */
+
+.front {
+
+    background: white;
+
+    border: 2px solid #3170a5;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.15);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    padding: 30px;
+}
+
+
+.front-label {
+
+    position: absolute;
+
+    top: 17px;
+
+    left: 20px;
+
+    color: #7b8ca2;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    font-weight: bold;
+}
+
+
+.word-label {
+
+    color: #7b8ca2;
+
+    font-size: 11px;
+
+    margin-bottom: 18px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.sentence {
+
+    color: #152f50;
+
+    font-size: 23px;
+
+    line-height: 1.45;
+
+    font-weight: bold;
+
+    max-width: 620px;
+
+    white-space: pre-line;
+}
+
+
+.flip-hint {
+
+    margin-top: 22px;
+
+    padding: 8px 16px;
+
+    background: #e8f0f8;
+
+    color: #3170a5;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   VERSO
+===================================================== */
+
+.back {
+
+    background:
+        linear-gradient(
+            135deg,
+            #174776,
+            #0c3158
+        );
+
+    border: 2px solid #4e82b8;
+
+    color: white;
+
+    transform: rotateY(180deg);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    padding: 30px;
+}
+
+
+.answer-icon {
+
+    font-size: 35px;
+
+    margin-bottom: 8px;
+}
+
+
+.answer-label {
+
+    color: #a9c6e4;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+
+.answer {
+
+    font-size: 25px;
+
+    font-weight: bold;
+
+    color: white;
+
+    white-space: pre-line;
+
+    line-height: 1.4;
+}
+
+
+.answer-example {
+
+    margin-top: 12px;
+
+    color: #b9d6ed;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   MENSAGEM
+===================================================== */
+
+.message {
+
+    height: 20px;
+
+    margin-top: 9px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.good {
+    color: #239765;
+}
+
+.bad {
+    color: #c94c57;
+}
+
+
+/* =====================================================
+   BOTÕES
+===================================================== */
+
+.buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 5px;
+}
+
+
+button {
+
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 11px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+
+button:hover {
+
+    transform: translateY(-2px);
+}
+
+
+.wrong {
+
+    flex: 1;
+
+    background: #d6535d;
+
+    color: white;
+}
+
+
+.correct {
+
+    flex: 1;
+
+    background: #2c9a6d;
+
+    color: white;
+}
+
+
+.next {
+
+    display: none;
+
+    width: 100%;
+
+    margin-top: 8px;
+
+    background: #3170a5;
+
+    color: white;
+}
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+.final {
+
+    display: none;
+
+    text-align: center;
+
+    padding-top: 70px;
+}
+
+
+.final-icon {
+
+    font-size: 60px;
+}
+
+
+.final h2 {
+
+    color: #173b69;
+
+    font-size: 29px;
+
+    margin-top: 12px;
+}
+
+
+.final p {
+
+    color: #777;
+
+    margin-top: 6px;
+}
+
+
+.final-score {
+
+    margin: 20px auto;
+
+    color: #3170a5;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+
+.restart {
+
+    background: #3170a5;
+
+    color: white;
+
+    padding: 11px 25px;
+}
+
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+@media(max-width: 650px) {
+
+    body {
+
+        overflow: auto;
+    }
+
+    .game {
+
+        width: 94vw;
+
+        padding: 18px;
+
+    }
+
+    .header {
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .card-area {
+
+        height: 310px;
+    }
+
+    .sentence {
+
+        font-size: 20px;
+    }
+
+    .answer {
+
+        font-size: 21px;
+    }
+
+    .buttons {
+
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     FUNDO
+===================================================== -->
+
+<div class="background">
+
+    <div class="glow glow1"></div>
+    <div class="glow glow2"></div>
+    <div class="glow glow3"></div>
+
+    <div class="neuron n1"></div>
+    <div class="neuron n2"></div>
+    <div class="neuron n3"></div>
+    <div class="neuron n4"></div>
+    <div class="neuron n5"></div>
+    <div class="neuron n6"></div>
+    <div class="neuron n7"></div>
+    <div class="neuron n8"></div>
+    <div class="neuron n9"></div>
+    <div class="neuron n10"></div>
+
+</div>
+
+
+<!-- =====================================================
+     JOGO
+===================================================== -->
+
+<div class="game">
+
+
+    <div id="game">
+
+
+        <!-- CABEÇALHO -->
+
+        <div class="header">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    🧬
+                </div>
+
+                <div>
+
+                    <h1>
+                        Flashcards de Embriologia
+                    </h1>
+
+                    <p>
+                        Teste seus conhecimentos sobre o desenvolvimento embrionário!
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat">
+                    ⭐ <span id="points">0</span>
+                </div>
+
+                <div class="stat">
+                    ❤️ <span id="lives">❤️❤️❤️</span>
+                </div>
+
+                <div class="stat">
+                    🔥 <span id="streak">0</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESSO -->
+
+        <div class="info">
+
+            <span id="questionNumber">
+                Pergunta 1 de 20
+            </span>
+
+            <span>
+                Progresso
+            </span>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div
+                class="progress-bar"
+                id="progressBar">
+            </div>
+
+        </div>
+
+
+        <!-- FLASHCARD -->
+
+        <div class="card-area">
+
+            <div
+                class="flashcard"
+                id="flashcard">
+
+
+                <!-- FRENTE -->
+
+                <div class="card front">
+
+                    <div class="front-label">
+                        EMBRIOLOGIA
+                    </div>
+
+
+                    <div
+                        class="word-label"
+                        id="wordLabel">
+
+                        PERGUNTA
+
+                    </div>
+
+
+                    <div
+                        class="sentence"
+                        id="sentence">
+
+                    </div>
+
+
+                    <div class="flip-hint">
+                        👆 Clique para virar o cartão
+                    </div>
+
+                </div>
+
+
+                <!-- VERSO -->
+
+                <div class="card back">
+
+                    <div class="answer-icon">
+                        💡
+                    </div>
+
+
+                    <div class="answer-label">
+                        RESPOSTA
+                    </div>
+
+
+                    <div
+                        class="answer"
+                        id="answer">
+
+                    </div>
+
+
+                    <div
+                        class="answer-example"
+                        id="answerExample">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MENSAGEM -->
+
+        <div
+            class="message"
+            id="message">
+        </div>
+
+
+        <!-- BOTÕES -->
+
+        <div
+            class="buttons"
+            id="buttons">
+
+            <button
+                class="wrong"
+                onclick="answer(false)">
+
+                ❌ Eu errei
+
+            </button>
+
+
+            <button
+                class="correct"
+                onclick="answer(true)">
+
+                ✅ Eu acertei
+
+            </button>
+
+        </div>
+
+
+        <!-- PRÓXIMO -->
+
+        <button
+            class="next"
+            id="nextButton"
+            onclick="nextCard()">
+
+            Próximo flashcard →
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =================================================
+         FINAL
+    ================================================= -->
+
+    <div
+        class="final"
+        id="final">
+
+        <div class="final-icon">
+            🏆
+        </div>
+
+        <h2>
+            Parabéns!
+        </h2>
+
+        <p>
+            Você terminou todos os flashcards de Embriologia!
+        </p>
+
+        <div
+            class="final-score"
+            id="finalScore">
+        </div>
+
+        <button
+            class="restart"
+            onclick="restartGame()">
+
+            🔄 Jogar novamente
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   FLASHCARDS DE EMBRIOLOGIA
+===================================================== */
+
+const cards = [
+
+    {
+        word: "Fecundação",
+        sentence: "O que é a fecundação?",
+        answer: "É o encontro do espermatozoide com o óvulo."
+    },
+
+    {
+        word: "Zigoto",
+        sentence:
+`Qual célula é formada após a fecundação?
+
+A) Feto
+B) Gástrula
+C) Zigoto
+D) Mórula`,
+        answer: "C) Zigoto"
+    },
+
+    {
+        word: "Clivagem",
+        sentence:
+        "Como se chama a divisão celular após a fecundação?",
+        answer: "Clivagem."
+    },
+
+    {
+        word: "Mórula",
+        sentence:
+`Qual estrutura se forma após as primeiras divisões do zigoto?
+
+A) Mórula
+B) Placenta
+C) Cordão umbilical
+D) Âmnio`,
+        answer: "A) Mórula"
+    },
+
+    {
+        word: "Nidação",
+        sentence:
+        "O que é a nidação?",
+        answer: "É a fixação do embrião no útero."
+    },
+
+    {
+        word: "Placenta",
+        sentence:
+`Qual órgão fornece nutrientes e oxigênio ao embrião?
+
+A) Pulmão
+B) Placenta
+C) Fígado
+D) Estômago`,
+        answer: "B) Placenta"
+    },
+
+    {
+        word: "Cordão umbilical",
+        sentence:
+        "Qual estrutura conecta o embrião à placenta?",
+        answer: "O cordão umbilical."
+    },
+
+    {
+        word: "Folhetos embrionários",
+        sentence:
+`Quais são os três folhetos embrionários?
+
+A) Ectoderma, mesoderma e endoderma
+B) Epiderme, derme e hipoderme
+C) Âmnio, cório e alantoide
+D) Zigoto, mórula e blástula`,
+        answer: "A) Ectoderma, mesoderma e endoderma."
+    },
+
+    {
+        word: "Ectoderma",
+        sentence:
+        "Qual folheto origina principalmente o sistema nervoso?",
+        answer: "O ectoderma."
+    },
+
+    {
+        word: "Mesoderma",
+        sentence:
+`O mesoderma participa da formação de quais estruturas?
+
+A) Ossos e músculos
+B) Sistema nervoso
+C) Revestimento intestinal
+D) Pulmões e fígado`,
+        answer: "A) Ossos e músculos."
+    },
+
+    {
+        word: "Endoderma",
+        sentence:
+`O endoderma origina principalmente quais sistemas?
+
+A) Nervoso e muscular
+B) Digestório e respiratório
+C) Ósseo e muscular
+D) Nervoso e ósseo`,
+        answer: "B) Digestório e respiratório."
+    },
+
+    {
+        word: "Gastrulação",
+        sentence:
+        "O que acontece durante a gastrulação?",
+        answer: "Formam-se os três folhetos embrionários."
+    },
+
+    {
+        word: "Tubo neural",
+        sentence:
+`Qual estrutura dá origem ao sistema nervoso?
+
+A) Tubo neural
+B) Placenta
+C) Saco vitelino
+D) Córion`,
+        answer: "A) Tubo neural."
+    },
+
+    {
+        word: "Organogênese",
+        sentence:
+        "O que é a organogênese?",
+        answer: "É o processo de formação dos órgãos do embrião."
+    },
+
+    {
+        word: "Período embrionário",
+        sentence:
+`Em qual período ocorre grande parte da formação dos órgãos?
+
+A) Embrionário
+B) Antes da fecundação
+C) Após o nascimento
+D) Puberdade`,
+        answer: "A) Período embrionário."
+    },
+
+    {
+        word: "Líquido amniótico",
+        sentence:
+        "Qual é a principal função do líquido amniótico?",
+        answer: "Proteger o embrião contra impactos."
+    },
+
+    {
+        word: "Blástula",
+        sentence:
+`Em qual estágio existe uma cavidade interna no embrião?
+
+A) Zigoto
+B) Blástula
+C) Gástrula
+D) Feto`,
+        answer: "B) Blástula."
+    },
+
+    {
+        word: "Desenvolvimento inicial",
+        sentence:
+        "Qual é a sequência correta do desenvolvimento inicial?",
+        answer: "Zigoto → mórula → blástula → gástrula."
+    },
+
+    {
+        word: "Embrião e feto",
+        sentence:
+        "Qual a diferença básica entre embrião e feto?",
+        answer:
+        "O feto é uma fase posterior, após a formação inicial dos órgãos."
+    },
+
+    {
+        word: "Cordão umbilical",
+        sentence:
+`Qual é a principal função do cordão umbilical?
+
+A) Produzir o embrião
+B) Conectar o feto à placenta
+C) Formar os órgãos
+D) Realizar a fecundação`,
+        answer:
+        "B) Conectar o feto à placenta e permitir trocas de substâncias."
+    }
+
+];
+
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
+let current = 0;
+
+let points = 0;
+
+let lives = 3;
+
+let streak = 0;
+
+let answered = false;
+
+
+/* =====================================================
+   MOSTRAR CARTA
+===================================================== */
+
+function showCard() {
+
+    const card = cards[current];
+
+
+    document.getElementById("sentence").textContent =
+        card.sentence;
+
+
+    document.getElementById("answer").textContent =
+        card.answer;
+
+
+    document.getElementById("wordLabel").textContent =
+        card.word;
+
+
+    document.getElementById("answerExample").textContent =
+        `Tema: ${card.word}`;
+
+
+    document.getElementById("questionNumber").textContent =
+        `Pergunta ${current + 1} de ${cards.length}`;
+
+
+    document.getElementById("points").textContent =
+        points;
+
+
+    document.getElementById("streak").textContent =
+        streak;
+
+
+    document.getElementById("progressBar").style.width =
+        ((current / cards.length) * 100) + "%";
+
+
+    updateLives();
+
+
+    document.getElementById("flashcard")
+        .classList.remove("flipped");
+
+
+    document.getElementById("buttons")
+        .style.display = "flex";
+
+
+    document.getElementById("nextButton")
+        .style.display = "none";
+
+
+    document.getElementById("message")
+        .textContent = "";
+
+
+    document.getElementById("message")
+        .className = "message";
+
+
+    answered = false;
+
+}
+
+
+/* =====================================================
+   VIDAS
+===================================================== */
+
+function updateLives() {
+
+    let text = "";
+
+    for (let i = 0; i < 3; i++) {
+
+        text += i < lives
+            ? "❤️"
+            : "🖤";
+
+    }
+
+    document.getElementById("lives")
+        .textContent = text;
+}
+
+
+/* =====================================================
+   VIRAR FLASHCARD
+===================================================== */
+
+document.getElementById("flashcard")
+    .addEventListener("click", function() {
+
+        this.classList.toggle("flipped");
+
+    });
+
+
+/* =====================================================
+   ACERTOU / ERROU
+===================================================== */
+
+function answer(correct) {
+
+    if (answered) return;
+
+    answered = true;
+
+
+    if (correct) {
+
+        points += 100;
+
+        streak++;
+
+
+        if (streak >= 3) {
+
+            points += 50;
+
+        }
+
+
+        document.getElementById("message")
+            .textContent =
+            streak >= 3
+                ? "🔥 COMBO! +150 pontos!"
+                : "🎉 Acertou! +100 pontos!";
+
+
+        document.getElementById("message")
+            .classList.add("good");
+
+    }
+
+
+    else {
+
+        lives--;
+
+        streak = 0;
+
+
+        document.getElementById("message")
+            .textContent =
+            "❌ Tudo bem! Confira a resposta.";
+
+
+        document.getElementById("message")
+            .classList.add("bad");
+
+    }
+
+
+    document.getElementById("points")
+        .textContent = points;
+
+
+    document.getElementById("streak")
+        .textContent = streak;
+
+
+    updateLives();
+
+
+    document.getElementById("flashcard")
+        .classList.add("flipped");
+
+
+    document.getElementById("buttons")
+        .style.display = "none";
+
+
+    document.getElementById("nextButton")
+        .style.display = "block";
+
+}
+
+
+/* =====================================================
+   PRÓXIMO FLASHCARD
+===================================================== */
+
+function nextCard() {
+
+    current++;
+
+
+    if (current >= cards.length) {
+
+        finishGame();
+
+        return;
+
+    }
+
+
+    showCard();
+
+}
+
+
+/* =====================================================
+   FINAL DO JOGO
+===================================================== */
+
+function finishGame() {
+
+    document.getElementById("game")
+        .style.display = "none";
+
+
+    document.getElementById("final")
+        .style.display = "block";
+
+
+    const maxPoints = cards.length * 100;
+
+    const percentage = Math.min(
+        100,
+        Math.round((points / maxPoints) * 100)
+    );
+
+
+    document.getElementById("finalScore")
+        .innerHTML =
+
+        `⭐ Pontuação: <strong>${points}</strong><br>
+         🎯 Aproveitamento: <strong>${percentage}%</strong><br>
+         ❤️ Vidas restantes: <strong>${lives}</strong>`;
+
+}
+
+
+/* =====================================================
+   REINICIAR
+===================================================== */
+
+function restartGame() {
+
+    current = 0;
+
+    points = 0;
+
+    lives = 3;
+
+    streak = 0;
+
+
+    document.getElementById("game")
+        .style.display = "block";
+
+
+    document.getElementById("final")
+        .style.display = "none";
+
+
+    showCard();
+
+}
+
+
+/* =====================================================
+   INICIAR
+===================================================== */
+
+showCard();
+
+</script>
+
+</body>
+
+</html>
+```
